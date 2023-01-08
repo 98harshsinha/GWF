@@ -1,0 +1,40 @@
+<label>Check Weather</label><br>
+<form id='Forecast'>
+    <input  type="text" name="ip" placeholder="Enter Your IP"><br>
+    <input type="submit" value="Find">
+</form>
+<div id="result">
+</div>
+<script>
+
+    $("#Forecast").on("submit", function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "GET",
+            url: "/content/training/us/en/magazine/jcr:content",
+            data: $(this).serialize(),
+            success: function (result) {
+                console.log("success");
+                console.log(result);
+                const myJSON = JSON.stringify(result);
+                if (!(myJSON.includes("false"))) {
+                    $("#result").html(
+                        "Temperature :<b>" + JSON.stringify(Math.round(result.main.temp - 272.15))+"*C" +
+                        "</b></br> City: <b>" + result.name + "</b><br>"
+
+                        + "Latitude: <b>" + result.coord.lat + "</b><br>"
+                        + "Longitude: <b>" + result.coord.lon + "</b>");
+                }
+
+                else {
+                    $("#result").html("Error: " + JSON.stringify(result.error.info));
+                }
+
+            },
+            error: function (err) {
+                alert('Error occurred');
+                console.log(err);
+            }
+        })
+    });
+</script>
